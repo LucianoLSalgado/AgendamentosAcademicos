@@ -1,0 +1,101 @@
+# .github/workflows/ci.yml
+#
+# Pipeline de Integração Contínua — Agendamentos Acadêmicos
+#
+# Disparado em:
+#   • Push para main ou develop
+#   • Pull Request para main
+#
+# Etapas:
+#   1. lint-and-test  → instala deps, roda testes, verifica coverage
+#   2. type-check     → tsc --noEmit (valida TypeScript sem gerar arquivos)
+#   3. build-apk      → gera APK Android via EAS Build (apenas em push para main)
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Job 1: Testes e cobertura ──────────────────────────────────────────
+  lint-and-test:
+    name: Testes e Cobertura
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Rodar testes com cobertura
+        run: npm run test:coverage
+
+      - name: Publicar relatório de cobertura
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  # ── Job 2: Verificação de tipos TypeScript ─────────────────────────────
+  type-check:
+    name: TypeScript Check
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Verificar tipos (tsc --noEmit)
+        run: npx tsc --noEmit
+
+  # ── Job 3: Build APK via EAS (apenas na main) ──────────────────────────
+  build-apk:
+    name: Build APK Android
+    runs-on: ubuntu-latest
+    needs: [lint-and-test, type-check]
+    # Executa somente em push direto para main (não em PRs)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Instalar EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Build APK (perfil preview)
+        run: eas build --platform android --profile preview --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
