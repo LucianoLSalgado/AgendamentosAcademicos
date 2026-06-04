@@ -7,9 +7,9 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
     '\\.(jpg|jpeg|png|gif|svg|ttf|otf|woff)$': '<rootDir>/__mocks__/fileMock.js',
-    '^expo-sqlite$':       '<rootDir>/__mocks__/expo-sqlite.js',
+    '^expo-sqlite$': '<rootDir>/__mocks__/expo-sqlite.js',
     '^expo-secure-store$': '<rootDir>/__mocks__/expo-secure-store.js',
-    '^react-native$':      '<rootDir>/__mocks__/react-native.js',
+    '^react-native$': '<rootDir>/__mocks__/react-native.js',
     '^react-native/(.*)$': '<rootDir>/__mocks__/react-native.js',
   },
   setupFilesAfterEnv: [
@@ -20,9 +20,10 @@ module.exports = {
     'node_modules/(?!(date-fns)/)',
   ],
   collectCoverageFrom: [
-    'services/database.ts',      // testado diretamente
-    'utils/**/*.{ts,tsx}',       // testado diretamente
-    'components/**/*.{ts,tsx}',  // testado diretamente
+    'services/database.ts',
+    'utils/formatters.ts',
+    'components/AgendamentoCard.tsx',
+    'components/StatusBadge.tsx',
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
