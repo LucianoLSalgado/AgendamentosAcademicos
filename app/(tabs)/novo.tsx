@@ -1,9 +1,6 @@
 // app/(tabs)/novo.tsx
 import React, { useState } from 'react';
-import {
-    View, Text, TouchableOpacity, StyleSheet,
-    ScrollView, Alert, Platform
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,6 +14,7 @@ import { TipoAgendamento } from '@/types';
 import { LABELS_TIPO } from '@/constants';
 import { formatarDataHora } from '@/utils/formatters';
 import { OfflineBanner } from '@/components/OfflineBanner';
+import { useRouter } from 'expo-router';
 
 // ── Schema de validação ────────────────────────────────────────────────────
 const schema = z.object({
@@ -35,6 +33,8 @@ const TIPOS: TipoAgendamento[] = ['orientacao', 'laboratorio', 'atendimento', 'r
 export default function NovoAgendamentoScreen() {
     const usuario = useAuthStore(s => s.usuario);
     const { criar } = useAgendamentos();
+
+    const router = useRouter();
 
     const [dataHora, setDataHora] = useState(new Date());
     const [showPicker, setShowPicker] = useState(false);
@@ -66,7 +66,12 @@ export default function NovoAgendamentoScreen() {
             usuarioId: usuario.id,
         });
         if (sucesso) {
-            Alert.alert('✅ Sucesso', 'Agendamento criado!');
+            Alert.alert('✅ Sucesso', 'Agendamento criado!', [
+                {
+                    text: 'OK',
+                    onPress: () => router.replace('/(tabs)/agendamentos'),
+                },
+            ]);
             reset();
             setDataHora(new Date());
             setTipo('atendimento');

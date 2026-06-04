@@ -3,7 +3,7 @@
 // URL base da API — em produção, muda apenas aqui
 // Para testes locais com Expo Go no celular físico, use o IP da sua máquina
 // (não use 'localhost' — o celular não sabe quem é 'localhost' da sua máquina)
-export const API_BASE_URL = 'http://192.168.56.1:3000'; // seu IP real aqui
+export const API_BASE_URL = 'http://192.168.0.10:3000'; // seu IP real aqui
 
 export const STORAGE_KEYS = {
   ACCESS_TOKEN:  'jwt_access_token',

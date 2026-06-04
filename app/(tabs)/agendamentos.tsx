@@ -1,5 +1,6 @@
 // app/(tabs)/agendamentos.tsx
 import React, { useState } from 'react';
+import { useFocusEffect } from 'expo-router';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAgendamentos } from '@/hooks/useAgendamentos';
@@ -18,9 +19,15 @@ const FILTROS: { label: string; valor: StatusAgendamento | 'todos' }[] = [
 ];
 
 export default function AgendamentosScreen() {
-  const { agendamentos, carregando, cancelar } = useAgendamentos();
+  const { agendamentos, carregando, cancelar, carregar } = useAgendamentos();
   const [filtro, setFiltro] = useState<StatusAgendamento | 'todos'>('todos');
   const [modalId, setModalId] = useState<number | null>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      carregar();
+    }, [carregar])
+  );
 
   const lista = filtro === 'todos'
     ? agendamentos

@@ -99,7 +99,6 @@ export function useAgendamentos() {
   }
 
   return {
-    agendamentos, carregando, erro, isConnected,
-    carregar, criar, atualizar, cancelar, deletar,
+    agendamentos, carregando, erro, isConnected, carregar, criar, atualizar, cancelar, deletar,
   };
 }
