@@ -5,9 +5,9 @@
 // variáveis externas porque elas ainda não existem quando o factory roda.
 jest.mock('expo-sqlite', () => {
   const mockDb = {
-    execAsync:     jest.fn().mockResolvedValue(undefined),
-    runAsync:      jest.fn().mockResolvedValue({ lastInsertRowId: 42, changes: 1 }),
-    getAllAsync:    jest.fn().mockResolvedValue([]),
+    execAsync: jest.fn().mockResolvedValue(undefined),
+    runAsync: jest.fn().mockResolvedValue({ lastInsertRowId: 42, changes: 1 }),
+    getAllAsync: jest.fn().mockResolvedValue([]),
     getFirstAsync: jest.fn().mockResolvedValue(null),
   };
   return {
@@ -47,7 +47,8 @@ describe('database service', () => {
   describe('initDatabase', () => {
     it('executa SQL com PRAGMA WAL e criação das tabelas', async () => {
       await initDatabase();
-      expect(db().execAsync).toHaveBeenCalledTimes(1);
+      // initDatabase chama execAsync 2x: tabelas principais + initSyncQueue
+      expect(db().execAsync).toHaveBeenCalledTimes(2);
       const sql: string = db().execAsync.mock.calls[0][0];
       expect(sql).toContain('PRAGMA journal_mode = WAL');
       expect(sql).toContain('CREATE TABLE IF NOT EXISTS agendamentos');
