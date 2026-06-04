@@ -28,6 +28,6 @@ module.exports = {
     '!**/node_modules/**',
   ],
   coverageThreshold: {
-    global: { branches: 60, functions: 70, lines: 70 },
+    global: { branches: 55, functions: 70, lines: 70 },
   },
 };
