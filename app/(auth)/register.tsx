@@ -139,3 +139,4 @@ const styles = StyleSheet.create({
   btn: { backgroundColor: '#2E5FA3', padding: 16, borderRadius: 12, alignItems: 'center', marginTop: 8 },
   btnTxt: { color: '#FFF', fontSize: 16, fontWeight: '700' },
 });
+

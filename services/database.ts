@@ -139,7 +139,6 @@ export async function atualizarAgendamento(
         await enqueueOperation('UPDATE', dados);
     }
 }
-
 // ── CANCELAR ─────────────────────────────────────────────────────────────
 export async function cancelarAgendamento(
     id: number,

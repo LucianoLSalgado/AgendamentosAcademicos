@@ -102,7 +102,6 @@ export async function logout(): Promise<void> {
   await SecureStore.deleteItemAsync(STORAGE_KEYS.REFRESH_TOKEN);
   await AsyncStorage.removeItem(STORAGE_KEYS.USUARIO);
 }
-
 // ── RECUPERAR TOKEN ───────────────────────────────────────────────────────
 export async function recuperarToken(): Promise<string | null> {
   return SecureStore.getItemAsync(STORAGE_KEYS.ACCESS_TOKEN);
