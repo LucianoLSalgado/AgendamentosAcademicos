@@ -12,10 +12,18 @@ import { salvarUsuarioLocal } from '@/services/database';
 import { useAuthStore } from '@/store/authStore';
 import * as SecureStore from 'expo-secure-store';
 import api from '@/services/api';
+<<<<<<< HEAD
 
 const schema = z.object({
   nome: z.string().min(3, 'Nome deve ter ao menos 3 caracteres'),
   email: z.string().email('E-mail inválido'),
+=======
+import { STORAGE_KEYS } from '@/constants';
+
+const schema = z.object({
+  nome: z.string().min(3, 'Nome deve ter ao menos 3 caracteres'),
+  email: z.email('E-mail inválido'),
+>>>>>>> a2d46cc (Correções STORAGE_KEYS, REFRESH_TOKEN,non-null assertion SQLite)
   senha: z.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
   confirmaSenha: z.string(),
 }).refine(d => d.senha === d.confirmaSenha, {
@@ -41,10 +49,17 @@ export default function RegisterScreen() {
         senha: data.senha,
         tipo: 'aluno',
       });
+<<<<<<< HEAD
       await SecureStore.setItemAsync('jwt_access_token', resposta.accessToken);
       await SecureStore.setItemAsync('jwt_refresh_token', resposta.refreshToken);
       await salvarUsuarioLocal(resposta.usuario);
       await AsyncStorage.setItem('usuario_logado', JSON.stringify(resposta.usuario));
+=======
+      await SecureStore.setItemAsync(STORAGE_KEYS.ACCESS_TOKEN, resposta.accessToken);   // ← constante
+      await SecureStore.setItemAsync(STORAGE_KEYS.REFRESH_TOKEN, resposta.refreshToken);   // ← constante
+      await salvarUsuarioLocal(resposta.usuario);
+      await AsyncStorage.setItem(STORAGE_KEYS.USUARIO, JSON.stringify(resposta.usuario));   // ← constante
+>>>>>>> a2d46cc (Correções STORAGE_KEYS, REFRESH_TOKEN,non-null assertion SQLite)
       setAuth(resposta.usuario, resposta.accessToken);
     } catch (e: any) {
       // Offline: cria localmente com token temporário
@@ -53,9 +68,17 @@ export default function RegisterScreen() {
           id: Date.now(), nome: data.nome, email: data.email,
           tipo: 'aluno' as const, criadoEm: new Date().toISOString(),
         };
+<<<<<<< HEAD
         await salvarUsuarioLocal(novoUsuario);
         await AsyncStorage.setItem('usuario_logado', JSON.stringify(novoUsuario));
         setAuth(novoUsuario, 'token-local-' + novoUsuario.id);
+=======
+        const tokenLocal = `token-local-${novoUsuario.id}`;
+        await salvarUsuarioLocal(novoUsuario);
+        await SecureStore.setItemAsync(STORAGE_KEYS.ACCESS_TOKEN, tokenLocal);           // ← persiste no SecureStore
+        await AsyncStorage.setItem(STORAGE_KEYS.USUARIO, JSON.stringify(novoUsuario));   // ← constante
+        setAuth(novoUsuario, tokenLocal);
+>>>>>>> a2d46cc (Correções STORAGE_KEYS, REFRESH_TOKEN,non-null assertion SQLite)
       } else if (e.response?.status === 409) {
         Alert.alert('Erro', 'E-mail já cadastrado. Tente fazer login.');
       } else {
