@@ -109,21 +109,15 @@ export async function atualizarAgendamento(
     dados: AtualizacaoAgendamento,
     isConnected = true
 ): Promise<void> {
-<<<<<<< HEAD
-=======
     // Busca o registro atual para fazer merge seguro
     const atual = await buscarAgendamentoPorId(dados.id);
     if (!atual) throw new Error(`Agendamento ${dados.id} não encontrado`);
 
     // Campos ausentes em 'dados' mantêm o valor atual do banco
->>>>>>> a2d46cc (Correções STORAGE_KEYS, REFRESH_TOKEN,non-null assertion SQLite)
     await db.runAsync(
         `UPDATE agendamentos
      SET titulo = ?, descricao = ?, data_hora = ?, tipo = ?, status = ?
      WHERE id = ?`,
-<<<<<<< HEAD
-        [dados.titulo!, dados.descricao!, dados.dataHora!, dados.tipo!, dados.status!, dados.id]
-=======
         [
             dados.titulo ?? atual.titulo,
             dados.descricao ?? atual.descricao,
@@ -132,7 +126,6 @@ export async function atualizarAgendamento(
             dados.status ?? atual.status,
             dados.id,
         ]
->>>>>>> a2d46cc (Correções STORAGE_KEYS, REFRESH_TOKEN,non-null assertion SQLite)
     );
 
     if (!isConnected) {
